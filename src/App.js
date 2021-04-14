@@ -15,6 +15,7 @@ class App extends Component {
     isLoading: false,
     showModal: false,
     modalImg: '',
+    error: '',
   };
   getSnapshotBeforeUpdate(prevProps, prevState) {
     if (
@@ -36,7 +37,7 @@ class App extends Component {
   }
 
   handleChangeSearchQuery = searchQuery => {
-    this.setState({ query: searchQuery, page: 1, hits: [] });
+    this.setState({ query: searchQuery, page: 1, hits: [], error: null });
   };
 
   scrollToBottom = () => {
@@ -66,37 +67,46 @@ class App extends Component {
       .finally(() => this.setState({ isLoading: false }));
   };
 
-  toggleModal = () => {
+  toggleModal = (url, alt) => {
     this.setState(({ showModal }) => ({
       showModal: !showModal,
+      modalImg: { url, alt },
     }));
   };
-
+  /* 
   handleHitOpen = event => {
-    event.preventDefault();
-    if (event.target.nodeName !== 'IMG') {
-      //console.log(event.target.nodeName);
-      return;
-    }
+    //event.preventDefault();
+    //if (event.target.nodeName !== 'IMG') {
+    //console.log(event.target.nodeName);
+    // return;
+    //}
     this.setState({ modalImg: event.target });
+    console.log(event.target);
     this.toggleModal();
-  };
+  }; */
 
   render() {
-    const { hits, modalImg, isLoading, showModal } = this.state;
+    const {
+      hits,
+      error,
+      modalImg: { url, alt },
+      isLoading,
+      showModal,
+    } = this.state;
     return (
       <div className={styles.app}>
         <SearchBar onSubmit={this.handleChangeSearchQuery} />
         {isLoading && <SpinerLoader />}
         {hits.length > 0 && (
-          <ImageGallery hits={hits} onClick={this.handleHitOpen} />
+          <ImageGallery hits={hits} onToggleModal={this.toggleModal} />
         )}
         {hits.length > 0 && <Button onClick={this.fetchHits} />}
         {showModal && (
-          <Modal modalImg={modalImg} onClose={this.toggleModal}>
-            <img src={modalImg.dataset.image} alt="" />
+          <Modal onClose={this.toggleModal}>
+            <img src={url} alt={alt} />
           </Modal>
         )}
+        {error && <p>Whoops, something went wrong: {error.message}</p>}
       </div>
     );
   }

@@ -2,17 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './ImageGalleryItem.module.css';
 
-const ImageGalleryItem = ({ url, bigHit, onClick }) => {
+const ImageGalleryItem = ({ url, alt, bigHit, onImgOpen }) => {
   return (
-    <li className={styles.ImageGalleryItem}>
-      <img
-        src={url}
-        alt=""
-        width="260"
-        data-image={bigHit}
-        className={styles.ImageGalleryItemImage}
-        onClick={onClick}
-      />
+    <li
+      className={styles.ImageGalleryItem}
+      onClick={() => onImgOpen(bigHit, alt)}
+    >
+      <img src={url} alt={alt} className={styles.ImageGalleryItemImage} />
     </li>
   );
 };
