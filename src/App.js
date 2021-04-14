@@ -73,17 +73,6 @@ class App extends Component {
       modalImg: { url, alt },
     }));
   };
-  /* 
-  handleHitOpen = event => {
-    //event.preventDefault();
-    //if (event.target.nodeName !== 'IMG') {
-    //console.log(event.target.nodeName);
-    // return;
-    //}
-    this.setState({ modalImg: event.target });
-    console.log(event.target);
-    this.toggleModal();
-  }; */
 
   render() {
     const {
