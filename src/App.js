@@ -1,24 +1,27 @@
-import React, { Component } from "react";
-import SearchBar from "./components/Searchbar";
-import ImageGallery from "./components/ImageGallery";
-import Button from "./components/Button";
-import SpinerLoader from "./components/Loader";
-import Modal from "./components/Modal";
-import getHits from "./services/Api";
-import styles from "./App.module.css";
+import React, { Component } from 'react';
+import SearchBar from './components/Searchbar';
+import ImageGallery from './components/ImageGallery';
+import Button from './components/Button';
+import SpinerLoader from './components/Loader';
+import Modal from './components/Modal';
+import getHits from './services/Api';
+import styles from './App.module.css';
 
 class App extends Component {
   state = {
     hits: [],
     page: 1,
-    query: "",
+    query: '',
     isLoading: false,
     showModal: false,
-    modalImg: "",
+    modalImg: '',
   };
   getSnapshotBeforeUpdate(prevProps, prevState) {
-    if (prevState.hits.length < this.state.hits.length && this.state.hits.length > 12) {
-      return "good choice";
+    if (
+      prevState.hits.length < this.state.hits.length &&
+      this.state.hits.length > 12
+    ) {
+      return 'good choice';
     }
     return null;
   }
@@ -32,14 +35,14 @@ class App extends Component {
     }
   }
 
-  handleChangeSearchQuery = (searchQuery) => {
+  handleChangeSearchQuery = searchQuery => {
     this.setState({ query: searchQuery, page: 1, hits: [] });
   };
 
   scrollToBottom = () => {
     window.scrollTo({
       top: document.documentElement.scrollHeight,
-      behavior: "smooth",
+      behavior: 'smooth',
     });
   };
 
@@ -53,13 +56,13 @@ class App extends Component {
     this.setState({ isLoading: true });
 
     getHits(options)
-      .then((data) => {
-        this.setState((prevState) => ({
-          hits: [...prevState.hits, ...data.hits],
+      .then(data => {
+        this.setState(prevState => ({
+          hits: [...prevState.hits, ...data],
           page: prevState.page + 1,
         }));
       })
-      .catch((error) => this.setState({ error }))
+      .catch(error => this.setState({ error }))
       .finally(() => this.setState({ isLoading: false }));
   };
 
@@ -69,10 +72,10 @@ class App extends Component {
     }));
   };
 
-  handleHitOpen = (event) => {
+  handleHitOpen = event => {
     event.preventDefault();
-    if (event.target.nodeName !== "IMG") {
-      console.log(event.target.nodeName);
+    if (event.target.nodeName !== 'IMG') {
+      //console.log(event.target.nodeName);
       return;
     }
     this.setState({ modalImg: event.target });
@@ -85,7 +88,9 @@ class App extends Component {
       <div className={styles.app}>
         <SearchBar onSubmit={this.handleChangeSearchQuery} />
         {isLoading && <SpinerLoader />}
-        {hits.length > 0 && <ImageGallery hits={hits} onClick={this.handleHitOpen} />}
+        {hits.length > 0 && (
+          <ImageGallery hits={hits} onClick={this.handleHitOpen} />
+        )}
         {hits.length > 0 && <Button onClick={this.fetchHits} />}
         {showModal && (
           <Modal modalImg={modalImg} onClose={this.toggleModal}>
